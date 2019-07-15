@@ -4,27 +4,29 @@ class Boat < ActiveRecord::Base
   has_many    :classifications, through: :boat_classifications
 
   def self.first_five
-    # all.limit(5)
+    all.limit(5)
   end
 
   def self.dinghy
-    # where("length < 20")
+    where("length < 20")
   end
 
   def self.ship
-    # where("length >= 20")
+    where("length >= 20")
   end
 
   def self.last_three_alphabetically
-    # all.order(name: :desc).limit(3)
+    all.order(name: :desc).limit(3)
   end
 
   def self.without_a_captain
-    # where(captain_id: nil)
+    where(captain_id: nil)
+    #* self/boat class, Boat.without_a_captain would return all boats with a id of nil.
   end
 
   def self.sailboats
-    # includes(:classifications).where(classifications: { name: 'Sailboat' })
+    includes(:classifications).where(classifications: { name: 'Sailboat' })
+    #* include all boats where classification = 'Sailboat'
   end
 
   def self.with_three_classifications
@@ -32,14 +34,15 @@ class Boat < ActiveRecord::Base
     # regularly. Just know that we can get this out of the database in
     # milliseconds whereas it would take whole seconds for Ruby to do the same.
     #
-    # joins(:classifications).group("boats.id").having("COUNT(*) = 3").select("boats.*")
+    joins(:classifications).group("boats.id").having("COUNT(*) = 3").select("boats.*")
   end
 
   def self.non_sailboats
-    # where("id NOT IN (?)", self.sailboats.pluck(:id))
+    where("id NOT IN (?)", self.sailboats.pluck(:id))
   end
 
   def self.longest
-    # order('length DESC').first
+    order('length DESC').first
+    #* Descending(highest to lowest) order of length:, only returning first
   end
 end
